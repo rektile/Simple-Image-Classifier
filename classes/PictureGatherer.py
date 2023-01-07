@@ -4,7 +4,7 @@ import os
 
 class PictureGatherer:
     def __init__(self, amountOfPictures, *args):
-        self.folder = "..\pictures"
+        self.imageFolder = "..\pictures"
         self.imageUrl = "https://www.google.com/search?q={}&tbm=isch&start={}"
         self.imagesPerPage = 20
         self.amountOfPictures = amountOfPictures
@@ -15,19 +15,19 @@ class PictureGatherer:
 
 
     def downloadImages(self, word, urlArray):
-        if not os.path.exists(self.folder):
-            os.mkdir(self.folder)
+        if not os.path.exists(self.imageFolder):
+            os.mkdir(self.imageFolder)
 
-        if not os.path.exists(f"{self.folder}\\{word}"):
-            os.mkdir(f"{self.folder}\\{word}")
+        if not os.path.exists(f"{self.imageFolder}\\{word}"):
+            os.mkdir(f"{self.imageFolder}\\{word}")
 
         print("[*] Downloading pictures")
         for i, url in enumerate(urlArray):
             r = requests.get(url)
             if r.status_code == 200:
-                with open(f"{self.folder}/{word}/{word}_{i}.jpg", "wb") as f:
+                with open(f"{self.imageFolder}/{word}/{word}_{i}.jpg", "wb") as f:
                     f.write(r.content)
-            print(f"[*] Downloaded picture {i+1}/{self.amountOfPictures}")
+            print(f"[*] Downloaded picture {i+1}/{len(urlArray)}")
 
     def prepareImages(self,word, amount):
 
@@ -56,8 +56,11 @@ class PictureGatherer:
         html = r.text
         soup = BeautifulSoup(html, "html.parser")
         tableOfImages = soup.find("table", {"class":"GpQGbf"})
-        imagesTags = tableOfImages.find_all("img")
-
+        try:
+            imagesTags = tableOfImages.find_all("img")
+        except:
+            print(f"[!] Got to max amount of images found")
+            return []
         allImageUrls = []
 
         for i in range(amount):
@@ -66,6 +69,6 @@ class PictureGatherer:
 
         return allImageUrls
 
-p = PictureGatherer(10, "dogs", "cats")
+p = PictureGatherer(500, "dog", "cat", "portrait")
 
 p.run()
