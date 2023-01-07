@@ -9,6 +9,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
+# TODO implement cli interaction
+# TODO implement more model types
+# TODO implement Gridsearch for models
+
 class ImageClassifier:
 
     def __init__(self):
