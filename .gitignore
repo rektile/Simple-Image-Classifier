@@ -1,3 +1,5 @@
 models/*
 pictures/*
 predict/*
+**/__pycache__
+.idea/*
