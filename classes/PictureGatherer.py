@@ -55,7 +55,7 @@ class PictureGatherer:
         r = requests.get(url)
         html = r.text
         soup = BeautifulSoup(html, "html.parser")
-        tableOfImages = soup.find("table", {"class":"GpQGbf"})
+        tableOfImages = soup.find("table", {"class": "GpQGbf"})
         try:
             imagesTags = tableOfImages.find_all("img")
         except:
@@ -69,6 +69,6 @@ class PictureGatherer:
 
         return allImageUrls
 
-p = PictureGatherer(500, "dog", "cat", "portrait")
+p = PictureGatherer(500, "dog", "cat")
 
 p.run()

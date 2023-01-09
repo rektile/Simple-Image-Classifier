@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 import pickle
-from PIL import Image
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn.model_selection import train_test_split
@@ -20,12 +19,46 @@ class ImageClassifier:
         self.predictFolder = "..\predict"
         self.modelFolder = "..\models"
 
-        self.modelName = "newModel"
+        self.modelName = None
         self.model = None
-        self.useSavedModel = True
+        self.modelType = None
+        self.useSavedModel = None
+        self.shouldSave = None
+        self.verbose = None
+        self.shape = None
+        self.toPredict = None
 
-        self.shape = (150, 150)
         self.dataFrame = None
+
+    def argumentParser(self, args):
+
+        print(args)
+        exit()
+
+        if args.model and args.load:
+            print("[!] Can't train and load a model at the same time.")
+            exit()
+
+        if args.save and args.load:
+            print("[!] Can't load and save at the same time.")
+            exit()
+
+        if args.save:
+            self.modelName = args.save
+            self.useSavedModel = False
+            self.shouldSave = True
+        elif args.load:
+            self.modelName = args.load
+            self.useSavedModel = True
+
+        self.verbose = args.verbose
+        self.toPredict = args.predict
+
+        try:
+            self.shape = tuple(args.resolution)
+        except Exception as E:
+            print("[!] Resolution is the wrong format. Example=(150,150)")
+            exit()
 
 
     def getAllImagePaths(self):
@@ -72,13 +105,12 @@ class ImageClassifier:
         x_train, y_train = df_train.drop(columns=["target"]), df_train["target"]
         x_test, y_test = df_test.drop(columns=["target"]), df_test["target"]
 
-
         print("[*] Training model with RandomForestClassifier")
         self.model = RandomForestClassifier()
         self.model.fit(x_train, y_train)
 
-        print(f"accuracy on train set is: {self.model.score(x_train, y_train)}")
-        print(f"accuracy on test set is: {self.model.score(x_test, y_test)}")
+        print(f"[*] Accuracy on train set is: {self.model.score(x_train, y_train)}")
+        print(f"[*] Accuracy on test set is: {self.model.score(x_test, y_test)}")
 
     def trainSVC(self, df_train, df_test):
         x_train, y_train = df_train.drop(columns=["target"]), df_train["target"]
@@ -88,8 +120,8 @@ class ImageClassifier:
         self.model = SVC(kernel="linear", probability=True)
         self.model.fit(x_train, y_train)
 
-        print(f"accuracy on train set is: {self.model.score(x_train, y_train)}")
-        print(f"accuracy on test set is: {self.model.score(x_test, y_test)}")
+        print(f"[*] Accuracy on train set is: {self.model.score(x_train, y_train)}")
+        print(f"[*] Accuracy on test set is: {self.model.score(x_test, y_test)}")
 
 
     def splitData(self, df):
@@ -98,6 +130,7 @@ class ImageClassifier:
     def predictImage(self, imagePath):
         image = self.prepareImage(imagePath)
         image = image.reshape(1, -1)
+
         print(f"[*] Prediction for {imagePath}")
         print(f"[-] Model thinks its a {self.model.predict(image)[0]} ")
         print(f"[-] Probability is {self.model.predict_proba(image)}")
@@ -128,17 +161,8 @@ class ImageClassifier:
 
             #self.trainSVC(df_train, df_test)
             self.trainRandomForestClassifier(df_train, df_test)
-            self.saveModel()
+
+            if self.shouldSave:
+                self.saveModel()
         else:
             self.loadModel()
-
-        self.predictImage(f"{self.predictFolder}\\cat.jpg")
-        self.predictImage(f"{self.predictFolder}\\dog.jpg")
-        self.predictImage(f"{self.predictFolder}\\longcat.jpg")
-
-
-
-i = ImageClassifier()
-
-i.run()
-#i.getAllImagePaths()
