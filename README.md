@@ -1,10 +1,10 @@
 # Simple Image Classifier
-## 1. Info
+## Info
 A simple program that lets you train a ML model for image classification.  
 There is also a helper script that lets you scrape training data from google images.  
 This script only works until **python 3.10.9**
 
-## 2. Installation
+## Installation
 Clone the repository
 ```shell
 git clone https://github.com/rektile/Simple-Image-Classifier.git
