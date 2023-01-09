@@ -2,15 +2,15 @@ from classes.ImageClassifier import ImageClassifier
 import argparse
 
 parser = argparse.ArgumentParser(prog="Simple Image Classifier",
-                                 description="Program to train ML algorithms to classify images.")
+                                 description="Program to train ML algorithms to classify images. "
+                                             "It uses data from the pictures folder. "
+                                             "The folder name counts as the label/target.")
 
 
 parser.add_argument("-m",
                     "--model",
                     help="ML model that will be used for training.",
-                    choices=["SVC", "RandomForest"],
-                    required=True,
-                    default="SVC")
+                    choices=["SVC", "RandomForest"])
 
 parser.add_argument("-v",
                     "--verbose",
@@ -37,11 +37,6 @@ parser.add_argument("-p",
                     "--predict",
                     help="The name of the picture you want the model to predict. This will be loaded from the predict folder.",
                     nargs="+")
-
-
-
-
-
 
 args = parser.parse_args()
 
