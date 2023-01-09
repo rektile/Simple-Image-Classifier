@@ -102,34 +102,32 @@ class ImageClassifier:
         self.dataFrame = df
 
     def trainModel(self, df_train, df_test):
-        if self.modelType == "SVC":
-            self.trainSVC(df_train, df_test)
-        elif self.modelType == "RandomForest":
-            self.trainRandomForestClassifier(df_train, df_test)
-        else:
-            print("[!] Problem with finding ML algorithm.")
-
-    def trainRandomForestClassifier(self, df_train, df_test):
         x_train, y_train = df_train.drop(columns=["target"]), df_train["target"]
         x_test, y_test = df_test.drop(columns=["target"]), df_test["target"]
 
-        print("[*] Training model with RandomForestClassifier")
+        if self.modelType == "SVC":
+            print("[*] Training model with SVC")
+            self.trainSVC(x_train, y_train)
+        elif self.modelType == "RandomForest":
+            print("[*] Training model with RandomForestClassifier")
+            self.trainRandomForestClassifier(x_train, y_train)
+        else:
+            print("[!] Problem with finding ML algorithm.")
+            exit()
+
+        print(f"[-] Accuracy on train set is: {self.model.score(x_train, y_train)}")
+        print(f"[-] Accuracy on test set is: {self.model.score(x_test, y_test)}")
+
+    def trainRandomForestClassifier(self, x_train, y_train):
         self.model = RandomForestClassifier(verbose=self.verbose, n_jobs=-1)
         self.model.fit(x_train, y_train)
 
-        print(f"[-] Accuracy on train set is: {self.model.score(x_train, y_train)}")
-        print(f"[-] Accuracy on test set is: {self.model.score(x_test, y_test)}")
 
-    def trainSVC(self, df_train, df_test):
-        x_train, y_train = df_train.drop(columns=["target"]), df_train["target"]
-        x_test, y_test = df_test.drop(columns=["target"]), df_test["target"]
-
-        print("[*] Training model with SVC")
+    def trainSVC(self, x_train, y_train):
         self.model = SVC(kernel="linear", probability=True, verbose=self.verbose)
         self.model.fit(x_train, y_train)
 
-        print(f"[-] Accuracy on train set is: {self.model.score(x_train, y_train)}")
-        print(f"[-] Accuracy on test set is: {self.model.score(x_test, y_test)}")
+
 
 
     def splitData(self, df):
