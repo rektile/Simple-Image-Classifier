@@ -4,7 +4,7 @@ import os
 
 class PictureGatherer:
     def __init__(self, amountOfPictures, keywords):
-        self.imageFolder = "..\pictures"
+        self.imageFolder = "pictures"
         self.imageUrl = "https://www.google.com/search?q={}&tbm=isch&start={}"
         self.imagesPerPage = 20
         self.amountOfPictures = amountOfPictures
