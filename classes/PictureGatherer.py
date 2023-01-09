@@ -3,15 +3,17 @@ from bs4 import BeautifulSoup
 import os
 
 class PictureGatherer:
-    def __init__(self, amountOfPictures, *args):
+    def __init__(self, amountOfPictures, keywords):
         self.imageFolder = "..\pictures"
         self.imageUrl = "https://www.google.com/search?q={}&tbm=isch&start={}"
         self.imagesPerPage = 20
         self.amountOfPictures = amountOfPictures
-        self.words = args
+        self.words = keywords
+
     def run(self):
         for word in self.words:
             self.prepareImages(word, self.amountOfPictures)
+        print("[*] Done!")
 
 
     def downloadImages(self, word, urlArray):
@@ -31,7 +33,7 @@ class PictureGatherer:
 
     def prepareImages(self,word, amount):
 
-        print(f"[*] Finding images of {word}")
+        print(f"[*] Finding images of \"{word}\"")
 
         currentTotalImages = 0
         imagesUrlArray = []
@@ -68,7 +70,3 @@ class PictureGatherer:
             allImageUrls.append(img.get("src"))
 
         return allImageUrls
-
-p = PictureGatherer(500, "dog", "cat")
-
-p.run()
