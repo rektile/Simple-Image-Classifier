@@ -47,6 +47,10 @@ class ImageClassifier:
             print("[!] Can't load and save at the same time.")
             exit()
 
+        if args.filter and args.load:
+            print("[!] Can't apply filters while using a saved model.")
+            exit()
+
         if args.save:
             self.modelName = args.save
             self.useSavedModel = False
