@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import pickle
+from classes.ModelConfiguration import ModelConfiguration
 from skimage.io import imread
 from skimage.transform import resize
 from skimage.feature import local_binary_pattern
@@ -168,8 +169,13 @@ class ImageClassifier:
         if not os.path.exists(self.modelFolder):
             os.mkdir(self.modelFolder)
 
+        mc = ModelConfiguration()
+        mc.model = self.model
+        mc.shape = self.shape
+        mc.filters = self.filters
+
         with open(modelPath, "wb") as f:
-            pickle.dump(self.model, f)
+            pickle.dump(mc, f)
 
     def loadModel(self):
         modelPath = f"{self.modelFolder}\\{self.modelName}"
@@ -183,7 +189,10 @@ class ImageClassifier:
             exit()
 
         with open(modelPath, "rb") as f:
-            self.model = pickle.load(f)
+            mc = pickle.load(f)
+            self.model = mc.model
+            self.shape = mc.shape
+            self.filters = mc.filters
             self.model.verbose = self.verbose
         print(f"[*] Model loaded: {self.model}")
 
