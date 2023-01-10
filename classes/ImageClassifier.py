@@ -4,6 +4,8 @@ import pandas as pd
 import pickle
 from skimage.io import imread
 from skimage.transform import resize
+from skimage.feature import local_binary_pattern
+from skimage.color import rgb2gray
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
@@ -26,6 +28,7 @@ class ImageClassifier:
         self.verbose = None
         self.shape = None
         self.toPredict = None
+        self.filters = None
 
         self.dataFrame = None
 
@@ -54,6 +57,7 @@ class ImageClassifier:
         self.verbose = args.verbose
         self.toPredict = args.predict
         self.modelType = args.model
+        self.filters = args.filter
 
         try:
             self.shape = tuple(args.resolution)
@@ -75,10 +79,23 @@ class ImageClassifier:
 
         return paths
 
+    def applyFilter(self, image):
+
+        if "gray" == self.filters:
+            image = rgb2gray(image)
+        elif "lbp" == self.filters:
+            image = rgb2gray(image)
+            image = local_binary_pattern(image, 8, 2, "nri_uniform")
+
+        return image
+
     def prepareImage(self, path):
         image = imread(path)
         imageResized = resize(image, (self.shape[0], self.shape[1], 3))
-        return imageResized.flatten()
+
+        imageWithFilters = self.applyFilter(imageResized)
+
+        return imageWithFilters.flatten()
 
     def getTrainingData(self, imagePaths):
 

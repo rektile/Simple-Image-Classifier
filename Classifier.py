@@ -23,6 +23,12 @@ parser.add_argument("-r",
                     nargs="?",
                     default=(150, 150))
 
+parser.add_argument("-f",
+                    "--filter",
+                    help="Apply certain filters/preprocessing to the image.",
+                    nargs="?",
+                    choices=["gray", "lbp"])
+
 parser.add_argument("-s",
                     "--save",
                     help="The name you want to give to the saved model. This will be saved in the models folder.",
