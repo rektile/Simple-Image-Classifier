@@ -66,11 +66,18 @@ class ImageClassifier:
         self.filters = args.filter
 
         try:
-            self.shape = ast.literal_eval(args.resolution)
+            if type(args.resolution) == str:
+                self.shape = ast.literal_eval(args.resolution)
+            elif type(args.resolution) == tuple:
+                self.shape = args.resolution
+            else:
+                raise Exception
+
             if type(self.shape) != tuple:
                 raise Exception
 
             if type(self.shape[0]) != int or type(self.shape[1]) != int:
+                print("a")
                 raise Exception
 
         except Exception as E:
