@@ -66,22 +66,10 @@ class ImageClassifier:
         self.filters = args.filter
 
         try:
-            if type(args.resolution) == str:
-                self.shape = ast.literal_eval(args.resolution)
-            elif type(args.resolution) == tuple:
-                self.shape = args.resolution
-            else:
-                raise Exception
-
-            if type(self.shape) != tuple:
-                raise Exception
-
-            if type(self.shape[0]) != int or type(self.shape[1]) != int:
-                print("a")
-                raise Exception
-
+            w, h = str(args.resolution).strip("()").split(",")
+            w, h = int(w), int(h)
+            self.shape = (w, h)
         except Exception as E:
-            print(E)
             print("[!] Resolution is the wrong format. Example=(150,150)")
             exit()
 
@@ -159,13 +147,9 @@ class ImageClassifier:
         self.model = RandomForestClassifier(verbose=self.verbose, n_jobs=-1)
         self.model.fit(x_train, y_train)
 
-
     def trainSVC(self, x_train, y_train):
         self.model = SVC(kernel="linear", probability=True, verbose=self.verbose)
         self.model.fit(x_train, y_train)
-
-
-
 
     def splitData(self, df):
         return train_test_split(df, shuffle=True, test_size=0.20)
