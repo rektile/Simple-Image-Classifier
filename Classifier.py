@@ -26,7 +26,6 @@ parser.add_argument("-r",
 parser.add_argument("-f",
                     "--filter",
                     help="Apply certain filters/preprocessing to the image.",
-                    nargs="?",
                     choices=["gray", "lbp"])
 
 parser.add_argument("-s",
