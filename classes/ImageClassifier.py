@@ -51,6 +51,10 @@ class ImageClassifier:
             print("[!] Can't apply filters while using a saved model.")
             exit()
 
+        if args.shape and args.load:
+            print("[!] Can't define shape while using a saved model.")
+            exit()
+
         if args.save:
             self.modelName = args.save
             self.useSavedModel = False
