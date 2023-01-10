@@ -1,3 +1,4 @@
+import ast
 import os
 import numpy as np
 import pandas as pd
@@ -65,8 +66,15 @@ class ImageClassifier:
         self.filters = args.filter
 
         try:
-            self.shape = tuple(args.resolution)
+            self.shape = ast.literal_eval(args.resolution)
+            if type(self.shape) != tuple:
+                raise Exception
+
+            if type(self.shape[0]) != int or type(self.shape[1]) != int:
+                raise Exception
+
         except Exception as E:
+            print(E)
             print("[!] Resolution is the wrong format. Example=(150,150)")
             exit()
 
