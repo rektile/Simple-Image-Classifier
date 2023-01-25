@@ -58,13 +58,13 @@ pictures/
 
 Get help screen for arguments
 ```shell
-python Classifier.py -h
+python TrainingDataScraper.py -h
 ```
 
 Example commands
 ```shell
 # Get 500 images each of dogs and cats
-python Classifier.py -a 500 -k dog cat
+python TrainingDataScraper.py -a 500 -k dog cat
 ```
 
 ### Warning
